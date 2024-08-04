@@ -1,6 +1,16 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, beforeFetch, column } from '@adonisjs/lucid/orm'
+import {
+  BaseModel,
+  beforeCreate,
+  beforeFetch,
+  belongsTo,
+  column,
+  hasMany,
+} from '@adonisjs/lucid/orm'
 import { HttpContext } from '@adonisjs/core/http'
+import File from '#models/file'
+import Tenant from './tenant.js'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 
 export default class Estate extends BaseModel {
   @beforeFetch()
@@ -15,10 +25,12 @@ export default class Estate extends BaseModel {
 
   @beforeCreate()
   // @ts-ignore
-  static async setTenant(user) {
+  static async setTenant(data) {
     const ctx = HttpContext.getOrFail()
 
-    user.tenantId = ctx.request.headers()['x-tenant']
+    const tenantId = ctx.request.headers()['x-tenant']
+
+    data.tenantId = tenantId
   }
 
   @column({ isPrimary: true })
@@ -65,6 +77,15 @@ export default class Estate extends BaseModel {
 
   @column()
   declare type: EstateType
+
+  @column()
+  declare tenantId: number
+
+  @belongsTo(() => Tenant)
+  declare tenant: BelongsTo<typeof Tenant>
+
+  @hasMany(() => File)
+  declare files: HasMany<typeof File>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

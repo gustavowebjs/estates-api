@@ -2,21 +2,23 @@ import Estate from '#models/estate'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class EstatesController {
-  public async index({}: HttpContext) {
-    const query = Estate.query().where('published', true)
+  async index({}: HttpContext) {
+    const query = Estate.query()
 
-    const estates = await query.paginate(1, 10)
+    const estates = await query.preload('files').paginate(1, 10)
 
     return estates
   }
 
-  public async show({ params }: HttpContext) {
-    const estate = await Estate.findOrFail(params.id)
+  async show({ params }: HttpContext) {
+    const query = Estate.query().where('id', params.id).preload('files')
+
+    const estate = await query.firstOrFail()
 
     return estate
   }
 
-  public async store({ request }: HttpContext) {
+  async store({ request }: HttpContext) {
     const data = request.only([
       'published',
       'title',
@@ -39,7 +41,7 @@ export default class EstatesController {
     return estate
   }
 
-  public async update({ params, request }: HttpContext) {
+  async update({ params, request }: HttpContext) {
     const estate = await Estate.findOrFail(params.id)
 
     const data = request.only([
@@ -66,7 +68,7 @@ export default class EstatesController {
     return estate
   }
 
-  public async destroy({ params }: HttpContext) {
+  async destroy({ params }: HttpContext) {
     const estate = await Estate.findOrFail(params.id)
 
     await estate.delete()
