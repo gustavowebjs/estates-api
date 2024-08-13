@@ -4,6 +4,7 @@ const UsersController = () => import('#controllers/users_controller')
 const SessionController = () => import('#controllers/session_controller')
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+const ContactsController = () => import('#controllers/contacts_controller')
 const FilesController = () => import('#controllers/files_controller')
 
 router.get('/', async () => {
@@ -20,6 +21,7 @@ router
     router.resource('tenants', TenantsController).apiOnly()
     router.resource('estates', EstatesController).apiOnly()
     router.resource('files', FilesController).apiOnly()
+    router.resource('contacts', ContactsController).apiOnly()
   })
   .use(middleware.auth())
 

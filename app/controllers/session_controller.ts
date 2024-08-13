@@ -1,3 +1,4 @@
+import Tenant from '#models/tenant'
 import User from '#models/user'
 import { HttpContext } from '@adonisjs/core/http'
 
@@ -28,6 +29,24 @@ export default class SessionController {
   }
 
   async session({ auth, response }: HttpContext) {
-    return response.json(auth.user)
+    const tenant = await Tenant.findBy('id', auth.user?.tenantId)
+
+    if (!tenant) {
+      return response.status(404).json({ message: 'Tenant not found' })
+    }
+
+    const session = {
+      tenantId: auth.user?.tenantId,
+      id: auth.user?.id,
+      name: auth.user?.name,
+      email: auth.user?.email,
+      tenantName: tenant.name,
+      tenantSite: tenant.website,
+      tenantLogo: tenant.logo,
+      tenantPhone: tenant.phone,
+      tenantDescription: tenant.description,
+    }
+
+    return response.json(session)
   }
 }

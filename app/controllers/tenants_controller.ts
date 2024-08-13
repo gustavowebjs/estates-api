@@ -17,7 +17,7 @@ export default class TenantsController {
   async update({ request, params }: HttpContext) {
     const tenant = await Tenant.findOrFail(params.id)
 
-    const data = request.only(['name', 'logo', 'website', 'description'])
+    const data = request.only(['name', 'logo', 'website', 'description', 'phone'])
 
     tenant.merge(data)
 
