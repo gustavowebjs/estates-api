@@ -14,7 +14,7 @@ export default class ContactsController {
   async index({ request }: HttpContext) {
     const { name, page = 1, pageSize = 25 } = request.qs()
 
-    const query = Contact.query()
+    const query = Contact.query().orderBy('name', 'asc')
 
     if (name) {
       query.where('name', 'like', `%${name}%`)

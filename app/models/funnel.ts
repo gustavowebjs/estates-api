@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon'
 import { BaseModel, beforeCreate, beforeFetch, column, hasMany } from '@adonisjs/lucid/orm'
 import { HttpContext } from '@adonisjs/core/http'
-import Deal from './deal.js'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
+import Deal from './deal.js'
 
-export default class Contact extends BaseModel {
+export default class Funnel extends BaseModel {
   @beforeFetch()
   // @ts-ignore
   static async filterTenant(query) {
@@ -31,22 +31,7 @@ export default class Contact extends BaseModel {
   declare name: string | null
 
   @column()
-  declare email: string
-
-  @column()
-  declare phone: string
-
-  @column()
-  declare address: string
-
-  @column()
-  declare city: string
-
-  @column()
-  declare state: string
-
-  @column()
-  declare zip: string
+  declare order: number
 
   @hasMany(() => Deal)
   declare deals: HasMany<typeof Deal>

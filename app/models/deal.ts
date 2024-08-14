@@ -1,10 +1,12 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, beforeFetch, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, beforeFetch, belongsTo, column } from '@adonisjs/lucid/orm'
 import { HttpContext } from '@adonisjs/core/http'
-import Deal from './deal.js'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import User from './user.js'
+import Contact from './contact.js'
+import Funnel from './funnel.js'
 
-export default class Contact extends BaseModel {
+export default class Deal extends BaseModel {
   @beforeFetch()
   // @ts-ignore
   static async filterTenant(query) {
@@ -31,25 +33,26 @@ export default class Contact extends BaseModel {
   declare name: string | null
 
   @column()
-  declare email: string
+  declare description: string | null
 
   @column()
-  declare phone: string
+  declare value: number
 
   @column()
-  declare address: string
+  declare userId: number
+
+  @belongsTo(() => User)
+  declare user: BelongsTo<typeof User>
 
   @column()
-  declare city: string
+  declare contactId: number
+
+  @belongsTo(() => Contact)
+  declare contact: BelongsTo<typeof Contact>
 
   @column()
-  declare state: string
-
-  @column()
-  declare zip: string
-
-  @hasMany(() => Deal)
-  declare deals: HasMany<typeof Deal>
+  declare funnelId: number
+  declare funnel: BelongsTo<typeof Funnel>
 
   @column()
   declare tenant_id: number
