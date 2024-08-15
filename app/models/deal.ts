@@ -39,6 +39,9 @@ export default class Deal extends BaseModel {
   declare value: number
 
   @column()
+  declare position: number
+
+  @column()
   declare userId: number
 
   @belongsTo(() => User)

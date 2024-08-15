@@ -25,7 +25,9 @@ router
     router.resource('files', FilesController).apiOnly()
     router.resource('contacts', ContactsController).apiOnly()
     router.resource('funnels', FunnelsController).apiOnly()
+
     router.resource('deals', DealsController).apiOnly()
+    router.put('/deals/:id/move', [DealsController, 'updatePosition'])
   })
   .use(middleware.auth())
 
